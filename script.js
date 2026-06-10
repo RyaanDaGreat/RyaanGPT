@@ -4,20 +4,26 @@ function sendMessage() {
     const chatBox = document.getElementById("chat-box");
 
     let text = input.value.trim();
-    if (text === "") return;
 
-    // show user message
-    chatBox.innerHTML += `<div class="user-message">${text}</div>`;
+    if (!text) return;
+
+    chatBox.innerHTML += `
+        <div class="user-message">${text}</div>
+    `;
 
     input.value = "";
 
-    // bot thinking
-    let reply = brain(text);
-
     setTimeout(() => {
-        chatBox.innerHTML += `<div class="bot-message">${reply}</div>`;
+
+        let reply = brain(text);
+
+        chatBox.innerHTML += `
+            <div class="bot-message">${reply}</div>
+        `;
+
         chatBox.scrollTop = chatBox.scrollHeight;
-    }, 400);
+
+    }, 500);
 }
 
 function brain(text) {
@@ -25,25 +31,28 @@ function brain(text) {
     text = text.toLowerCase();
 
     if (text.includes("hello") || text.includes("hi")) {
-        return "Hey 😄 I am Ryaanai, your AI assistant!";
+        return "Hey 😄 I'm RyaanGPT. What can I help you with today?";
     }
 
-    if (text.includes("name")) {
-        return "I am Ryaanai 🖤 built for you.";
-    }
-
-    if (text.includes("help")) {
-        return "I can chat, answer questions, and grow smarter over time 😎";
+    if (text.includes("who are you")) {
+        return "I am RyaanGPT 🖤 A futuristic AI assistant built to help, chat and think with you.";
     }
 
     if (text.includes("dragon")) {
-        return "🔥 Dragons are powerful creatures! Want a story?";
+        return "🔥 Dragons are legendary. Want me to create a dragon story or game idea?";
     }
 
-    if (text.includes("chess")) {
-        return "♟️ Chess tip: control the center of the board!";
+    if (text.includes("game")) {
+        return "🎮 I can help build games, ideas, bosses, powers, or cool mechanics.";
     }
 
-    // default smart-ish response
-    return "Hmm 🤔 tell me more so I can understand better.";
+    if (text.includes("anime")) {
+        return "😎 Anime mode activated. Want action, mystery, fantasy, or detective style?";
+    }
+
+    if (text.includes("sad")) {
+        return "🖤 I’m here. Want to talk about it?";
+    }
+
+    return "Interesting 🤔 Tell me more so I can understand better.";
 }
