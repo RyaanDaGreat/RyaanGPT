@@ -1,60 +1,26 @@
-async function sendMessage() {
+import OpenAI from "openai";
 
-    const input = document.getElementById("user-input");
-    const chatBox = document.getElementById("chat-box");
+export const handler = async (event) => {
+  const { message } = JSON.parse(event.body);
 
-    const message = input.value.trim();
+  const client = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+  });
 
-    if (!message) return;
+  const response = await client.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: "You are a fantasy RPG dungeon master." },
+      { role: "user", content: message }
+    ]
+  });
 
-    // user message
-    chatBox.innerHTML += `
-        <div class="user-message">
-            ${message}
-        </div>
-    `;
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      reply: response.choices[0].message.content
+    })
+  };
+};
 
-    input.value = "";
-
-    // thinking bubble
-    const thinking = document.createElement("div");
-    thinking.className = "bot-message";
-    thinking.innerText =
-        "🧠 RyaanGPT GOD MODE thinking...";
-    chatBox.appendChild(thinking);
-
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    try {
-
-        const response = await fetch(
-            "https://api-inference.huggingface.co/models/microsoft/DialoGPT-large",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    inputs: message
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        let reply =
-            data.generated_text ||
-            "⚡ My aura is too powerful. Try again 😎";
-
-        thinking.innerText = reply;
-
-    } catch (error) {
-
-        thinking.innerText =
-            "❌ GOD MODE connection failed 😭";
-    }
-
-    chatBox.scrollTop =
-        chatBox.scrollHeight;
-}
 
